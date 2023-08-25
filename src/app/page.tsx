@@ -1,3 +1,5 @@
+'use client'
+
 import "../style/global.css";
 import React from 'react';
 import Layout from './layout'; // Layout 컴포넌트를 가져옴
@@ -9,8 +11,8 @@ const Page: React.FC = () => {
     return (
         <Layout>
             <Header />
-            <hr></hr>
             <Main />
+            <hr></hr>
             <Footer />
         </Layout>
     );
