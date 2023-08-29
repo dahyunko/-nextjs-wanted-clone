@@ -1,5 +1,3 @@
-![image](https://github.com/dahyunko/nextjs-wanted-clone/assets/101400650/147c2494-2096-443a-ba40-f3cb44eed2ef)# wanted 클론 코딩
-
 ### 컴포넌트화 방향
 
 ---
