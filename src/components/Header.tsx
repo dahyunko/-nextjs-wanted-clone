@@ -3,9 +3,13 @@ import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import Wanted from "/public/wanted.svg";
+import { useRouter } from 'next/navigation';
+import Link from 'next/link'
 
 
 const Header: React.FC = () => {
+    const router = useRouter();
+    
     return (
         <header className="fixed z-20 top-0 w-full border-b-2 ">
             <div className=" mx-auto my-0 bg-white px-4 font-semibold text-gray-600 h-full w-7/12 ">
@@ -16,19 +20,27 @@ const Header: React.FC = () => {
                     </div>
                     <div className="flex justify-between items-center">
                         <ul className="flex ">
-                            <li className="px-4 py-1"><a>채용</a></li>
-                            <li className="px-4 py-1"><a>이벤트</a></li>
-                            <li className="px-4 py-1"><a>이력서</a></li>
-                            <li className="px-4 py-1"><a>소셜</a></li>
-                            <li className="px-4 py-1"><a>프리랜서</a></li>
-                            <li className="px-4 py-1"><a>AI 합격예측</a></li>
+                            <li className="px-4 py-1"><Link href="">채용</Link></li>
+                            <li className="px-4 py-1"><Link href="">이벤트</Link></li>
+                            <li className="px-4 py-1"><Link href="">이력서</Link></li>
+                            <li className="px-4 py-1"><Link href="">소셜</Link></li>
+                            <li className="px-4 py-1"><Link href="">프리랜서</Link></li>
+                            <li className="px-4 py-1"><Link href="">AI 합격예측</Link></li>
                         </ul>
                     </div>
                     <div className="flex justify-center items-center ">
                         <ul className="flex justify-center items-center">
                             <li className="p-2"><SearchIcon className="text-2xl" /></li>
-                            <li className=""><span>회원가입</span></li>
-                            <li className=""><span>/로그인</span></li>
+                            <li className="">
+                                <button type="button" onClick={() => router.push('/dashboard')}>
+                                회원가입
+                                </button>
+                            </li>
+                            <li className="">
+                                <button type="button" onClick={() => router.push('/dashboard')}>
+                                /로그인
+                                </button>
+                            </li>
                         </ul>
                         <span className="mx-8">|</span>
                         <button className="border-solid border-2 border-gray-300 rounded-full h-10 w-31 px-2 text-gray-500 ">기업 서비스</button>

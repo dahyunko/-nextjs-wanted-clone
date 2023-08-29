@@ -1,0 +1,54 @@
+'use client'
+
+import "../style/global.css";
+import React, { useEffect, useState } from 'react';
+
+interface ResultProfile{
+    title:string
+    body:string
+}
+
+export default function LocalState(){
+    const [loading, setLoading] = useState<boolean>(true) // false
+    const [data, setData] = useState<ResultProfile>() // string ir undefined
+    const [error, setError] = useState<boolean>(false) // true
+
+    useEffect(() =>{
+        fetch('https://jsonplaceholder.typicode.com/posts/1')
+        .then(async (result:Response) => {
+            const resultBody = await result.json();
+            setLoading(false)
+            setData(resultBody)
+            setError(false)
+        }).catch(() =>{
+            //network 커낵션이 끊겼을때만 호출된다.
+            setLoading(false)
+            setData(undefined)
+            setError(false)
+        })
+    },[])
+
+    let notundefined:{name:string, age:number}|undefined= undefined
+    notundefined = {name:'', age: 0}
+    console.log(notundefined!.name!) //명시적으로 개발자가 해석하여 보장하는 것 = undefined가 아니라는 것
+
+
+    //?. : Null Guard, question mark
+    //! : exclamation mark
+    //?? : Default Value 설정 시 (앞: undefined, null일 경우)
+    // && : 앞에 조건이 true 일 때 뒤엣것을 변환해야할 시
+
+    return(
+        <React.Fragment>
+            {loading ? (
+                <p>...is...loading</p>
+            ):(
+                <div>
+                    <div>{data?.title}</div>
+                    <div>{data?.body}</div>
+                </div>
+            )}
+            {error ? <></>: <></>}
+        </React.Fragment>
+    );
+}
