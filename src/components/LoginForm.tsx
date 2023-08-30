@@ -1,5 +1,6 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import Modal from '../modal/SiginupModal';
+import { useRouter } from 'next/navigation';
 
 const SignupForm = () =>{
     const [username, setUsername] = useState('');
@@ -14,27 +15,19 @@ const SignupForm = () =>{
     const usernameRef = useRef<HTMLInputElement | null>(null);
     const passwordRef = useRef<HTMLInputElement | null>(null);
     
+    const router = useRouter();
+
     const handleSubmit = (e: { preventDefault: () => void; }) =>{
         e.preventDefault();
 
-        if(usernameRef === passwordRef) console.log("same");
-        console.log(usernameRef);
-        console.log(passwordRef);
-
-        //제약조건
-        const usernamePattern = /^.*@.*$/;
-        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-        if(!usernamePattern.test(username)){
+        if(username !== "helloworld@example.com"){
             if (usernameRef.current !== null) {
-                usernameRef.current.focus();
                 setModalErrorMessage(userErrMsg);
                 setShowModal(true); 
             }
         }
-        else if (!passwordPattern.test(password)) {
+        else if (password !== "Qwer!234") {
             if(passwordRef.current !== null){
-                passwordRef.current.focus();
                 setModalErrorMessage(pwErrMsg);
                 setShowModal(true); 
             }
@@ -42,6 +35,7 @@ const SignupForm = () =>{
         else{
             console.log('Username: ', username);
             console.log('Password:', password);
+            router.push('/');
         }
     };
 
@@ -49,27 +43,10 @@ const SignupForm = () =>{
         setShowModal(false);
     }
 
-    //모달 꺼지고 focus
-    useEffect(()=>{
-        if(!showModal){
-            setTimeout(() => {
-                console.log(usernameRef.current);
-                console.log(passwordRef.current);
-
-                if (usernameRef.current !== null && usernameRef.current !== document.activeElement) {
-                    usernameRef.current.focus();
-                }
-                else if (passwordRef.current !== null && passwordRef.current !== document.activeElement) {
-                    passwordRef.current.focus();
-                }
-            }, 0);
-        }
-    }, [showModal]);
-
     return(
         <div>
             <div>
-            <form onSubmit={handleSubmit} className='block items-center'>
+            <form onSubmit={handleSubmit} className='block'>
                 <div className="mb-10 ">
                     <div className=''>
                         <label htmlFor="" className="font-bold text-gray-600 text-lg">Username:</label>
@@ -80,7 +57,6 @@ const SignupForm = () =>{
                         value={username}
                         onChange={(e)=> setUsername(e.target.value)}
                     />
-                    <p className='text-gray-500 text-lg'>{userErrMsg}</p>
                 </div>
                 <div className='mb-10 '>
                     <label htmlFor="" className='font-bold text-gray-600 text-lg'>Password:</label>
@@ -90,10 +66,9 @@ const SignupForm = () =>{
                         value={password}
                         onChange={(e)=> setPassword(e.target.value)}
                     />
-                    <p className='text-gray-500 text-lg'>{pwErrMsg}</p>
                 </div>
-                <button type='submit' className='mb-2 w-full h-16 px-9 text-xl font-semibold rounded-full bg-blue-300 text-gray-900'>
-                    Sign Up
+                <button type='submit' className='mb-9 w-full h-16 px-9 text-xl font-semibold rounded-full bg-blue-300 text-gray-900'>
+                    Log In
                 </button>
             </form>
             </div> 

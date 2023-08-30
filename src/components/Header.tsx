@@ -32,12 +32,12 @@ const Header: React.FC = () => {
                         <ul className="flex justify-center items-center">
                             <li className="p-2"><SearchIcon className="text-2xl" /></li>
                             <li className="">
-                                <button type="button" onClick={() => router.push('/dashboard')}>
+                                <button type="button" onClick={() => router.push('/signup')}>
                                 회원가입
                                 </button>
                             </li>
                             <li className="">
-                                <button type="button" onClick={() => router.push('/dashboard')}>
+                                <button type="button" onClick={() => router.push('/login')}>
                                 /로그인
                                 </button>
                             </li>
