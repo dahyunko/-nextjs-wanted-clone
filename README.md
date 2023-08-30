@@ -1,12 +1,11 @@
-# wanted 클론 코딩
-
 ### 컴포넌트화 방향
 
 ---
 
 - **폴더 구조**
     
-    ![Untitled](wanted%20%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A9%E1%86%AB%20%E1%84%8F%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC%206b41d86ae13c46ecbfd90023c241a33e/Untitled.png)
+    ![image](https://github.com/dahyunko/nextjs-wanted-clone/assets/101400650/fa6e299b-50fe-49fa-a8a3-cc5c0f1e3f34)
+
     
 
 1. home 페이지를 header, main, footer로 분할
@@ -44,7 +43,8 @@
         
         `MainArticle_1.tsx` , `MainArticle_2.tsx` , `MainArticle_3.tsx` 생성
         
-        ![Untitled](wanted%20%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A9%E1%86%AB%20%E1%84%8F%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC%206b41d86ae13c46ecbfd90023c241a33e/Untitled%201.png)
+        ![image](https://github.com/dahyunko/nextjs-wanted-clone/assets/101400650/387e2df6-14ea-46c2-875d-47988cc6b392)
+
         
     2.  `Main.tsx` 에 다음과 같이 구성
         
@@ -96,7 +96,8 @@
         </Red>
         ```
         
-        ![Untitled](wanted%20%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A9%E1%86%AB%20%E1%84%8F%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC%206b41d86ae13c46ecbfd90023c241a33e/Untitled%202.png)
+        ![image](https://github.com/dahyunko/nextjs-wanted-clone/assets/101400650/3f80d8f2-b820-4c3a-bed6-1a70a144229a)
+
         
         - 코드
             
@@ -159,5 +160,4 @@
             
 
 - **결과**
-
-![Untitled](wanted%20%E1%84%8F%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A9%E1%86%AB%20%E1%84%8F%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC%206b41d86ae13c46ecbfd90023c241a33e/Untitled%203.png)
+![image](https://github.com/dahyunko/nextjs-wanted-clone/assets/101400650/418e61be-4d9e-489f-9313-0fe2cd59c3c4)
