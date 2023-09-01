@@ -29,14 +29,14 @@ const SignupForm = () =>{
             if (usernameRef.current !== null) {
                 usernameRef.current.focus();
                 setModalErrorMessage(userErrMsg);
-                setShowModal(true); 
+                //setShowModal(true); 
             }
         }
         else if (!passwordPattern.test(password)) {
             if(passwordRef.current !== null){
                 passwordRef.current.focus();
                 setModalErrorMessage(pwErrMsg);
-                setShowModal(true); 
+                //setShowModal(true); 
             }
         }
         else{
