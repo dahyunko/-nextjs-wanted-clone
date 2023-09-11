@@ -13,7 +13,12 @@ const SignupForm = () =>{
 
     const usernameRef = useRef<HTMLInputElement | null>(null);
     const passwordRef = useRef<HTMLInputElement | null>(null);
+
+    //제약조건
+    const usernamePattern = /^.*@.*$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     
+
     const handleSubmit = (e: { preventDefault: () => void; }) =>{
         e.preventDefault();
 
@@ -21,22 +26,25 @@ const SignupForm = () =>{
         console.log(usernameRef);
         console.log(passwordRef);
 
-        //제약조건
-        const usernamePattern = /^.*@.*$/;
-        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        // //제약조건
+        // const usernamePattern = /^.*@.*$/;
+        // const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
         if(!usernamePattern.test(username)){
             if (usernameRef.current !== null) {
-                usernameRef.current.focus();
+                
                 setModalErrorMessage(userErrMsg);
-                //setShowModal(true); 
+                setShowModal(true); 
+                
+                usernameRef.current.focus();
+                console.log(usernameRef.current);
             }
         }
         else if (!passwordPattern.test(password)) {
             if(passwordRef.current !== null){
                 passwordRef.current.focus();
                 setModalErrorMessage(pwErrMsg);
-                //setShowModal(true); 
+                setShowModal(true); 
             }
         }
         else{
@@ -56,10 +64,10 @@ const SignupForm = () =>{
                 console.log(usernameRef.current);
                 console.log(passwordRef.current);
 
-                if (usernameRef.current !== null && usernameRef.current !== document.activeElement) {
+                if (usernameRef.current !== null && !usernamePattern.test(username)) {
                     usernameRef.current.focus();
                 }
-                else if (passwordRef.current !== null && passwordRef.current !== document.activeElement) {
+                else if (passwordRef.current !== null && !passwordPattern.test(password)) {
                     passwordRef.current.focus();
                 }
             }, 0);

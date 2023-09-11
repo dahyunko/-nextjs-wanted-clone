@@ -1,3 +1,5 @@
+'use client'
+
 import { Box, Button, Modal, Typography } from '@mui/material'
 import { createContext, useState } from 'react'
 
