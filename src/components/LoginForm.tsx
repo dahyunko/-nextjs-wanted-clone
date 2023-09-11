@@ -73,7 +73,7 @@ const SignupForm = () =>{
             </form>
             </div> 
         {/*모달*/}
-        <Modal showModal={showModal} closeModal={closeModal} errorMessage={modalErrorMessage}></Modal>
+        <Modal openModal={showModal} closeModal={closeModal} errorMessage={modalErrorMessage}></Modal>
         </div>
     );
 };

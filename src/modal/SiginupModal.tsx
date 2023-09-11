@@ -2,13 +2,15 @@ import React from "react"
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 interface ModalProps{
-    showModal: boolean;
+    openModal: {
+        open: boolean;
+        message?: string;
+    };
     closeModal: ()=>void;
-    errorMessage: string;
 }
 
-const Modal: React.FC<ModalProps> = ({showModal, closeModal, errorMessage}) =>{
-    if(!showModal) return null;
+const Modal: React.FC<ModalProps> = ({openModal, closeModal}) =>{
+    if(!openModal.open) return null;
 
     return(
         <div className='h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-70 text-center'>
@@ -16,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({showModal, closeModal, errorMessage}) =>{
                 <div>
                     <div className="modal-content mb-10 font-semibold text-xl">
                         <p>Oops! Something went wrong. Please try again.</p>
-                        <p className="text-red-500">{errorMessage}</p>
+                        <p className="text-red-500">{openModal.message}</p>
                     </div>
                     <button onClick={closeModal} className="w-full flex text-gray-500 justify-center text-center">
                         <span>Close</span>
