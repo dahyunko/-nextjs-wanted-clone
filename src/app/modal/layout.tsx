@@ -1,15 +1,13 @@
-
-import ModalProvider from '@/modal/modal-provider'
+import ModalProvider from '@/modal/modal-provider';
 
 export default function DashboardLayout({
-    children,
-  }: {
-    children: React.ReactNode
-  }) {
-    return (
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
     <section>
-        <ModalProvider>
-        {children}
-        </ModalProvider>
-    </section>);
-  }
+      <ModalProvider>{children}</ModalProvider>
+    </section>
+  );
+}

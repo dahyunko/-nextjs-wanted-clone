@@ -1,81 +1,95 @@
-import React, {useState, useRef} from 'react';
+import React, { useState} from 'react';
 import Modal from '../modal/SiginupModal';
-import { useRouter } from 'next/navigation';
+import firestore from '@/firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
+import { useUserFormState } from '@/components/SignupForm';
+import { useRouter } from 'next/navigation'
 
-const SignupForm = () =>{
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [showModal, setShowModal] = useState(false);
-    const [modalErrorMessage, setModalErrorMessage] = useState('');
-    // const [usernameError, setUsernameError] = useState('');
-    // const [passwordError, setPasswordError] = useState('');
-    const userErrMsg = 'Username must include "@" and have text before and after it.';
-    const pwErrMsg = 'Password must be at least 8 characters long and include at least 1 lowercase letter, 1 uppercase letter, 1 digit, and 1 special character.';
+const LoginupForm = () => {
+  const { username, password } = useUserFormState();
 
-    const usernameRef = useRef<HTMLInputElement | null>(null);
-    const passwordRef = useRef<HTMLInputElement | null>(null);
+  const [modal, setModal] = useState<{
+    open: boolean;
+    message?: string;
+    ref?: React.RefObject<HTMLInputElement | null>;
+  }>({ open: false });
+
+  const router = useRouter();
+
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     
-    const router = useRouter();
-
-    const handleSubmit = (e: { preventDefault: () => void; }) =>{
-        e.preventDefault();
-
-        if(username !== "helloworld@example.com"){
-            if (usernameRef.current !== null) {
-                setModalErrorMessage(userErrMsg);
-                setShowModal(true); 
-            }
-        }
-        else if (password !== "Qwer!234") {
-            if(passwordRef.current !== null){
-                setModalErrorMessage(pwErrMsg);
-                setShowModal(true); 
-            }
+    try {
+      const query = await getDocs(collection(firestore, 'user'));
+      query.forEach((doc) => {
+        const userData = doc.data();
+        //userData와 username, password를 비교
+        if (userData.name === username.state && userData.password === password.state) {
+          // 회원 정보 일치, 로그인 성공
+          console.log('로그인 성공');
+          router.push('/', { scroll: false });
         }
         else{
-            console.log('Username: ', username);
-            console.log('Password:', password);
-            router.push('/');
+          // 회원 정보가 없거나 일치하지 않는 경우
+          console.log('회원 정보 없음 또는 로그인 실패');
+          setModal({ open: true, message: '회원 정보 없음 또는 로그인 실패' });
         }
-    };
-
-    const closeModal = () =>{
-        setShowModal(false);
+      });
+    } catch (error) {
+      console.error('Firestore에서 데이터를 가져오는 중 오류 발생:', error);
     }
 
-    return(
-        <div>
-            <div>
-            <form onSubmit={handleSubmit} className='block'>
-                <div className="mb-10 ">
-                    <div className=''>
-                        <label htmlFor="" className="font-bold text-gray-600 text-lg">Username:</label>
-                    </div>
-                    <input className='mb-1 w-full h-14 px-9 text-xl border-2 font-semibold rounded-lg border-gray-300 text-gray-900'
-                        type='text'
-                        ref={usernameRef}
-                        value={username}
-                        onChange={(e)=> setUsername(e.target.value)}
-                    />
-                </div>
-                <div className='mb-10 '>
-                    <label htmlFor="" className='font-bold text-gray-600 text-lg'>Password:</label>
-                    <input className='mb-1 w-full h-14 px-9 text-xl border-2 font-semibold rounded-lg border-gray-300 text-gray-900'
-                        type='password'
-                        ref={passwordRef}
-                        value={password}
-                        onChange={(e)=> setPassword(e.target.value)}
-                    />
-                </div>
-                <button type='submit' className='mb-9 w-full h-16 px-9 text-xl font-semibold rounded-full bg-blue-300 text-gray-900'>
-                    Log In
-                </button>
-            </form>
-            </div> 
-        {/*모달*/}
-        <Modal openModal={showModal} closeModal={closeModal} errorMessage={modalErrorMessage}></Modal>
-        </div>
-    );
+  };
+
+  const closeModal = () => {
+    setModal({ open: false });
+    if (modal.ref?.current) modal.ref.current.focus();
+  };
+
+  return (
+    <div>
+      <div>
+        <form onSubmit={handleSubmit} className="block items-center">
+          <div className="mb-10 ">
+            <div className="">
+              <label htmlFor="" className="font-bold text-gray-600 text-lg">
+                Username:
+              </label>
+            </div>
+            <input
+              className="mb-1 w-full h-14 px-9 text-xl border-2 font-semibold rounded-lg border-gray-300 text-gray-900"
+              type="text"
+              ref={username.ref}
+              value={username.state}
+              onChange={(e) => username.set(e.target.value)}
+            />
+            <p className="text-gray-500 text-lg">{username.errorMsg}</p>
+          </div>
+          <div className="mb-10 ">
+            <label htmlFor="" className="font-bold text-gray-600 text-lg">
+              Password:
+            </label>
+            <input
+              className="mb-1 w-full h-14 px-9 text-xl border-2 font-semibold rounded-lg border-gray-300 text-gray-900"
+              type="password"
+              ref={password.ref}
+              value={password.state}
+              onChange={(e) => password.set(e.target.value)}
+            />
+            <p className="text-gray-500 text-lg">{password.errorMsg}</p>
+          </div>
+          <button
+            type="submit"
+            className="mb-2 w-full h-16 px-9 text-xl font-semibold rounded-full bg-blue-300 text-gray-900"
+          >
+            Sign Up
+          </button>
+        </form>
+      </div>
+      {/*모달*/}
+      <Modal openModal={modal} closeModal={closeModal}></Modal>
+    </div>
+  );
 };
 
-export default SignupForm;
+export default LoginupForm;

@@ -2,13 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
-    :root{
-        --color-primary: 255 115 179;
-    }
+@layer base {
+  :root {
+    --color-primary: 255 115 179;
+  }
 
-    @font-face{
+  @font-face {
     font-family: 'Tenada';
-    
-    }
+  }
 }

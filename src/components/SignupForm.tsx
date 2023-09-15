@@ -1,5 +1,7 @@
 import React, { useState, useRef, SetStateAction, Dispatch } from 'react';
 import Modal from '../modal/SiginupModal';
+import firestore from '@/firebase/firestore';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
 
 interface FormStateType {
   state: string;
@@ -15,7 +17,7 @@ interface UserFormStateType {
   password: FormStateType;
 }
 
-const useUserFormState = (): UserFormStateType => {
+export const useUserFormState = (): UserFormStateType => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   return {
@@ -47,7 +49,7 @@ const SignupForm = () => {
     ref?: React.RefObject<HTMLInputElement | null>;
   }>({ open: false });
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     if (!username.pattern.test(username.state)) {
@@ -59,8 +61,16 @@ const SignupForm = () => {
         setModal({ open: true, message: password.errorMsg, ref: password.ref });
       }
     } else {
-      console.log('Username: ', username.state);
-      console.log('Password:', password.state);
+      //id 추가
+      await addDoc(collection(firestore, 'user'), {
+        name: username.state,
+        password: password.state,
+      });
+      const query = await getDocs(collection(firestore, 'user'));
+      console.log(query);
+      query.forEach((doc) => {
+        console.log(doc.id, doc.data());
+      });
     }
   };
 
