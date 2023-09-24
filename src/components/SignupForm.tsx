@@ -1,7 +1,10 @@
 import React, { useState, useRef, SetStateAction, Dispatch } from 'react';
 import Modal from '../modal/SiginupModal';
-import firestore from '@/firebase/firestore';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+//import firestore from '@/firebase/firestore';
+//import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { authService } from '@/firebase/firebasedb';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 interface FormStateType {
   state: string;
@@ -42,6 +45,7 @@ export const useUserFormState = (): UserFormStateType => {
 
 const SignupForm = () => {
   const { username, password } = useUserFormState();
+  const router = useRouter();
 
   const [modal, setModal] = useState<{
     open: boolean;
@@ -61,7 +65,28 @@ const SignupForm = () => {
         setModal({ open: true, message: password.errorMsg, ref: password.ref });
       }
     } else {
+      //oauth 연결 성공
+      try {
+        await createUserWithEmailAndPassword(
+          authService,
+          username.state,
+          password.state,
+        ).then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+          //팝업 => 성공 표시
+          const confirmation = window.confirm(
+            '회원가입 성공!!, 메인페이지로 이동합니다.',
+          );
+          if (confirmation) {
+            router.push('/', { scroll: false });
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
       //id 추가
+      /*
       await addDoc(collection(firestore, 'user'), {
         name: username.state,
         password: password.state,
@@ -70,7 +95,7 @@ const SignupForm = () => {
       console.log(query);
       query.forEach((doc) => {
         console.log(doc.id, doc.data());
-      });
+      });*/
     }
   };
 

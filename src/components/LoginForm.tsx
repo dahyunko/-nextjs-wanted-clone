@@ -1,9 +1,15 @@
 import React, { useState} from 'react';
 import Modal from '../modal/SiginupModal';
-import firestore from '@/firebase/firestore';
-import { collection, getDocs } from 'firebase/firestore';
+//import firestore from '@/firebase/firestore';
+//import { collection, getDocs } from 'firebase/firestore';
 import { useUserFormState } from '@/components/SignupForm';
 import { useRouter } from 'next/navigation'
+import { authService } from '@/firebase/firebasedb';
+import { 
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserSessionPersistence
+} from 'firebase/auth';
 
 const LoginupForm = () => {
   const { username, password } = useUserFormState();
@@ -19,7 +25,21 @@ const LoginupForm = () => {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     
+
     try {
+      await signInWithEmailAndPassword(authService, username.state, password.state)
+      .then((userCredential)=>{
+        const user = userCredential.user;
+        console.log('로그인 성공: ', user);
+        setPersistence(authService, browserSessionPersistence);
+        const confirmation = window.confirm(
+          '로그인 성공!!, 메인페이지로 이동합니다.',
+        );
+        if (confirmation) {
+          router.push('/', { scroll: false });
+        }
+      });
+      /*
       const query = await getDocs(collection(firestore, 'user'));
       query.forEach((doc) => {
         const userData = doc.data();
@@ -34,9 +54,15 @@ const LoginupForm = () => {
           console.log('회원 정보 없음 또는 로그인 실패');
           setModal({ open: true, message: '회원 정보 없음 또는 로그인 실패' });
         }
-      });
+      });*/
     } catch (error) {
       console.error('Firestore에서 데이터를 가져오는 중 오류 발생:', error);
+      const confirmation = window.confirm(
+        '로그인 실패',
+      );
+      if (confirmation) {
+        if (username.ref.current) username.ref.current.focus();
+      }
     }
 
   };
