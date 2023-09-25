@@ -9,6 +9,21 @@ import Link from 'next/link';
 const Header: React.FC = () => {
   const router = useRouter();
 
+  // if (typeof window !== 'undefined') {}
+  const user = window.localStorage.getItem('email');
+  console.log(user);
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('email');
+
+    const confirmation = window.confirm('로그아웃하였습니다.');
+    if (confirmation) {
+      //router.push('/', { scroll: false });
+      //재부팅 필요
+      router.refresh();
+    }
+  };
+
   return (
     <header className="fixed z-20 top-0 w-full border-b-2 ">
       <div className=" mx-auto my-0 bg-white px-4 font-semibold text-gray-600 h-full w-7/12 ">
@@ -46,16 +61,34 @@ const Header: React.FC = () => {
               <li className="p-2">
                 <SearchIcon className="text-2xl" />
               </li>
-              <li className="">
-                <button type="button" onClick={() => router.push('/signup')}>
-                  회원가입
-                </button>
-              </li>
-              <li className="">
-                <button type="button" onClick={() => router.push('/login')}>
-                  /로그인
-                </button>
-              </li>
+              {user ? (
+                <>
+                  <li className="text-blue-500 ">
+                    <button type="button">{user}님</button>
+                  </li>
+                  <li className="">
+                    <button type="button" onClick={handleLogout}>
+                      /로그아웃
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="">
+                    <button
+                      type="button"
+                      onClick={() => router.push('/signup')}
+                    >
+                      회원가입
+                    </button>
+                  </li>
+                  <li className="">
+                    <button type="button" onClick={() => router.push('/login')}>
+                      /로그인
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
             <span className="mx-8">|</span>
             <button className="border-solid border-2 border-gray-300 rounded-full h-10 w-31 px-2 text-gray-500 ">

@@ -20,7 +20,7 @@ const Page: React.FC = () => {
             </div>
             <LoginForm />
             <div className="flex justify-center items-center w-full text-center">
-              <Link href="/singup" className="text-blue-700">
+              <Link href="/signup" className="text-blue-700">
                 회원가입 하러가기
               </Link>
             </div>

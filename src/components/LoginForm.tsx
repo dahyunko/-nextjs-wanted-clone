@@ -1,14 +1,14 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import Modal from '../modal/SiginupModal';
 //import firestore from '@/firebase/firestore';
 //import { collection, getDocs } from 'firebase/firestore';
 import { useUserFormState } from '@/components/SignupForm';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import { authService } from '@/firebase/firebasedb';
-import { 
+import {
   signInWithEmailAndPassword,
   setPersistence,
-  browserSessionPersistence
+  browserSessionPersistence,
 } from 'firebase/auth';
 
 const LoginupForm = () => {
@@ -24,21 +24,26 @@ const LoginupForm = () => {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    
 
     try {
-      await signInWithEmailAndPassword(authService, username.state, password.state)
-      .then((userCredential)=>{
+      await signInWithEmailAndPassword(
+        authService,
+        username.state,
+        password.state,
+      ).then((userCredential) => {
         const user = userCredential.user;
         console.log('로그인 성공: ', user);
         setPersistence(authService, browserSessionPersistence);
-        const confirmation = window.confirm(
-          '로그인 성공!!, 메인페이지로 이동합니다.',
-        );
-        if (confirmation) {
-          router.push('/', { scroll: false });
-        }
+        window.localStorage.setItem('email', JSON.stringify(user.email));
+        //window.sessionStorage.setItem('email', JSON.stringify(user.email));
       });
+      const confirmation = window.confirm(
+        '로그인 성공!!, 메인페이지로 이동합니다.',
+      );
+      if (confirmation) {
+        router.push('/', { scroll: false });
+      }
+
       /*
       const query = await getDocs(collection(firestore, 'user'));
       query.forEach((doc) => {
@@ -57,14 +62,11 @@ const LoginupForm = () => {
       });*/
     } catch (error) {
       console.error('Firestore에서 데이터를 가져오는 중 오류 발생:', error);
-      const confirmation = window.confirm(
-        '로그인 실패',
-      );
+      const confirmation = window.confirm('로그인 실패');
       if (confirmation) {
         if (username.ref.current) username.ref.current.focus();
       }
     }
-
   };
 
   const closeModal = () => {
