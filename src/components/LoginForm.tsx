@@ -33,8 +33,9 @@ const LoginupForm = () => {
       ).then((userCredential) => {
         const user = userCredential.user;
         console.log('로그인 성공: ', user);
-        setPersistence(authService, browserSessionPersistence);
-        window.localStorage.setItem('user', JSON.stringify({
+        setPersistence(authService, browserSessionPersistence);//세션 생성
+
+        window.localStorage.setItem('user', JSON.stringify({//로컬 생성
           uid: user.uid,
           displayName: user.displayName,
           email: user.email,
