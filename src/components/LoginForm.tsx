@@ -12,7 +12,10 @@ import {
   GithubAuthProvider,
   signInWithPopup,
   GoogleAuthProvider,
+  User,
 } from 'firebase/auth';
+import GoogleIcon from '@mui/icons-material/Google';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 const LoginupForm = () => {
   const { username, password } = useUserFormState();
@@ -25,6 +28,34 @@ const LoginupForm = () => {
 
   const router = useRouter();
 
+  //로컬 스토리지 저장
+  const localStorageSave = (user: User) => {
+    try {
+      window.localStorage.setItem(
+        'user',
+        JSON.stringify({
+          //로컬 생성
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        }),
+      );
+
+      const confirmation = window.confirm(
+        '로그인 성공!!, 메인페이지로 이동합니다.',
+      );
+      if (confirmation) {
+        router.push('/', { scroll: false });
+      }
+    } catch (error) {
+      console.error(
+        '로컬 스토리지에 사용자 정보를 저장하는 중 오류 발생:',
+        error,
+      );
+    }
+  };
+
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
@@ -34,29 +65,10 @@ const LoginupForm = () => {
         username.state,
         password.state,
       ).then((userCredential) => {
-        const user = userCredential.user;
-        console.log('로그인 성공: ', user);
         setPersistence(authService, browserSessionPersistence); //세션 생성
-
-        window.localStorage.setItem(
-          'user',
-          JSON.stringify({
-            //로컬 생성
-            uid: user.uid,
-            displayName: user.displayName,
-            email: user.email,
-            photoURL: user.photoURL,
-          }),
-        );
-        //window.sessionStorage.setItem('email', JSON.stringify(user.email));
+        //console.log('로그인 성공: ', user);
+        localStorageSave(userCredential.user);
       });
-      const confirmation = window.confirm(
-        '로그인 성공!!, 메인페이지로 이동합니다.',
-      );
-      if (confirmation) {
-        router.push('/', { scroll: false });
-      }
-
       /*
       const query = await getDocs(collection(firestore, 'user'));
       query.forEach((doc) => {
@@ -82,26 +94,28 @@ const LoginupForm = () => {
     }
   };
 
-  function handleGoogleLogin() {
+  const handleGoogleLogin = () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(authService, provider); // 팝업창 띄워서 로그인
-    setPersistence(authService, browserSessionPersistence)
-      .then((data) => {
-        username.set(username.state); // user data 설정
-        console.log(data); // console에 UserCredentialImpl 출력
+    signInWithPopup(authService, provider)
+      .then((userCredential) => {
+        setPersistence(authService, browserSessionPersistence);
+        // username.set(username.state); // user data 설정
+        console.log(userCredential); // console에 UserCredentialImpl 출력
+        localStorageSave(userCredential.user);
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-  function handleGithubLogin() {
+  const handleGithubLogin = () => {
     const provider = new GithubAuthProvider();
-    signInWithPopup(authService, provider); // 팝업창 띄워서 로그인
-    setPersistence(authService, browserSessionPersistence)
-      .then((data) => {
-        username.set(username.state); // user data 설정
-        console.log(data); // console에 UserCredentialImpl 출력
+    signInWithPopup(authService, provider)
+      .then((userCredential) => {
+        setPersistence(authService, browserSessionPersistence);
+        // username.set(username.state); // user data 설정
+        console.log(userCredential); // console에 UserCredentialImpl 출력
+        localStorageSave(userCredential.user);
       })
       .catch((err) => {
         console.log(err);
@@ -153,8 +167,12 @@ const LoginupForm = () => {
           </button>
         </form>
         <div className="flex w-20  items-center text-center "></div>
-        <button onClick={handleGoogleLogin}>구글 로그인</button>
-        <button onClick={handleGithubLogin}>깃허브 로그인</button>
+        <button onClick={handleGoogleLogin} className='mr-3'>
+          <GoogleIcon className="text-4xl text-gray-500" />
+        </button>
+        <button onClick={handleGithubLogin}>
+        <GitHubIcon className="text-4xl text-gray-500"/>
+        </button>
       </div>
       {/*모달*/}
       <Modal openModal={modal} closeModal={closeModal}></Modal>
