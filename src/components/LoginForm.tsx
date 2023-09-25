@@ -9,6 +9,9 @@ import {
   signInWithEmailAndPassword,
   setPersistence,
   browserSessionPersistence,
+  GithubAuthProvider,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from 'firebase/auth';
 
 const LoginupForm = () => {
@@ -33,14 +36,18 @@ const LoginupForm = () => {
       ).then((userCredential) => {
         const user = userCredential.user;
         console.log('로그인 성공: ', user);
-        setPersistence(authService, browserSessionPersistence);//세션 생성
+        setPersistence(authService, browserSessionPersistence); //세션 생성
 
-        window.localStorage.setItem('user', JSON.stringify({//로컬 생성
-          uid: user.uid,
-          displayName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-        }));
+        window.localStorage.setItem(
+          'user',
+          JSON.stringify({
+            //로컬 생성
+            uid: user.uid,
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+          }),
+        );
         //window.sessionStorage.setItem('email', JSON.stringify(user.email));
       });
       const confirmation = window.confirm(
@@ -74,6 +81,32 @@ const LoginupForm = () => {
       }
     }
   };
+
+  function handleGoogleLogin() {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(authService, provider); // 팝업창 띄워서 로그인
+    setPersistence(authService, browserSessionPersistence)
+      .then((data) => {
+        username.set(username.state); // user data 설정
+        console.log(data); // console에 UserCredentialImpl 출력
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleGithubLogin() {
+    const provider = new GithubAuthProvider();
+    signInWithPopup(authService, provider); // 팝업창 띄워서 로그인
+    setPersistence(authService, browserSessionPersistence)
+      .then((data) => {
+        username.set(username.state); // user data 설정
+        console.log(data); // console에 UserCredentialImpl 출력
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   const closeModal = () => {
     setModal({ open: false });
@@ -119,6 +152,9 @@ const LoginupForm = () => {
             Sign Up
           </button>
         </form>
+        <div className="flex w-20  items-center text-center "></div>
+        <button onClick={handleGoogleLogin}>구글 로그인</button>
+        <button onClick={handleGithubLogin}>깃허브 로그인</button>
       </div>
       {/*모달*/}
       <Modal openModal={modal} closeModal={closeModal}></Modal>

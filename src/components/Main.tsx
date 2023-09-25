@@ -49,8 +49,8 @@ const Main: React.FC = () => {
 
           {/* aside1 */}
           <aside className="mt-16">
-            <div className="flex justify-center items-center mt-24 h-16 ">
-              <a className="bg-gradient-to-r from-blue-500 via-blue-700 to-blue-500 text-white rounded-full w-full py-5  px-3 text-center text-bold text-xl">
+            <div className="flex justify-center items-center mt-24 h-24 ">
+              <a className="bg-gradient-to-r from-blue-500 via-blue-700 to-blue-500 text-white rounded-full w-full py-8  px-3 text-center text-bold text-xl">
                 <SearchIcon className="text-5xl mr-2" />
                 <span className="text-2lg font-bold">
                   채용 중인 포지션 보러가기
