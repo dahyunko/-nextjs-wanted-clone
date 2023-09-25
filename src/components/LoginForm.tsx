@@ -34,7 +34,12 @@ const LoginupForm = () => {
         const user = userCredential.user;
         console.log('로그인 성공: ', user);
         setPersistence(authService, browserSessionPersistence);
-        window.localStorage.setItem('email', JSON.stringify(user.email));
+        window.localStorage.setItem('user', JSON.stringify({
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        }));
         //window.sessionStorage.setItem('email', JSON.stringify(user.email));
       });
       const confirmation = window.confirm(

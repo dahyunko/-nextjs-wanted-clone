@@ -5,23 +5,31 @@ import SearchIcon from '@mui/icons-material/Search';
 import Wanted from '/public/wanted.svg';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { authService } from '@/firebase/firebasedb';
+import { signOut } from 'firebase/auth';
 
 const Header: React.FC = () => {
   const router = useRouter();
 
   // if (typeof window !== 'undefined') {}
-  const user = window.localStorage.getItem('email');
-  console.log(user);
+  const storageUser = window.localStorage.getItem('user');
+  let user;
+  if(storageUser){
+    user = JSON.parse(storageUser);//localstorage안에 들어있는 값을 parse로 변경 후 email을 가져와야함
+    console.log(user.email);
+  }
 
   const handleLogout = () => {
-    window.localStorage.removeItem('email');
-
-    const confirmation = window.confirm('로그아웃하였습니다.');
-    if (confirmation) {
-      //router.push('/', { scroll: false });
-      //재부팅 필요
-      router.refresh();
-    }
+    window.localStorage.removeItem('user');//local storage 정보 삭제
+    //로그아웃 하면서 session storage도 함께 삭제됨
+    signOut(authService).then(() => {
+      const confirmation = window.confirm('로그아웃하였습니다.');
+      if (confirmation) {
+        //router.push('/', { scroll: false });
+        //재부팅 필요
+        router.refresh();
+      }
+    });
   };
 
   return (
@@ -64,7 +72,7 @@ const Header: React.FC = () => {
               {user ? (
                 <>
                   <li className="text-blue-500 ">
-                    <button type="button">{user}님</button>
+                    <button type="button">{user.email}님</button>
                   </li>
                   <li className="">
                     <button type="button" onClick={handleLogout}>
