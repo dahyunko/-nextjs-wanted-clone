@@ -42,12 +42,14 @@ const LoginupForm = () => {
         }),
       );
 
-      const confirmation = window.confirm(
-        '로그인 성공!!, 메인페이지로 이동합니다.',
-      );
-      if (confirmation) {
-        router.push('/', { scroll: false });
-      }
+      router.push('/', { scroll: false });
+      //cross-origin으로 window 조작 못함
+      // const confirmation = window.confirm(
+      //   '로그인 성공!!, 메인페이지로 이동합니다.',
+      // );
+      // if (confirmation) {
+      //   router.push('/', { scroll: false });
+      // }
     } catch (error) {
       console.error(
         '로컬 스토리지에 사용자 정보를 저장하는 중 오류 발생:',
@@ -66,7 +68,6 @@ const LoginupForm = () => {
         password.state,
       ).then((userCredential) => {
         setPersistence(authService, browserSessionPersistence); //세션 생성
-        //console.log('로그인 성공: ', user);
         localStorageSave(userCredential.user);
       });
       /*
@@ -115,7 +116,8 @@ const LoginupForm = () => {
         setPersistence(authService, browserSessionPersistence);
         // username.set(username.state); // user data 설정
         console.log(userCredential); // console에 UserCredentialImpl 출력
-        localStorageSave(userCredential.user);
+        const user = userCredential.user;
+        localStorageSave(user);
       })
       .catch((err) => {
         console.log(err);
