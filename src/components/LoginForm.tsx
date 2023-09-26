@@ -3,23 +3,23 @@ import Modal from '../modal/SiginupModal';
 //import firestore from '@/firebase/firestore';
 //import { collection, getDocs } from 'firebase/firestore';
 import { useUserFormState } from '@/components/SignupForm';
-import { useRouter } from 'next/navigation';
 import { authService } from '@/firebase/firebasedb';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import GoogleIcon from '@mui/icons-material/Google';
 import {
-  signInWithEmailAndPassword,
-  setPersistence,
-  browserSessionPersistence,
   GithubAuthProvider,
-  signInWithPopup,
   GoogleAuthProvider,
   User,
+  browserSessionPersistence,
+  setPersistence,
+  signInWithEmailAndPassword,
+  signInWithPopup,
 } from 'firebase/auth';
-import GoogleIcon from '@mui/icons-material/Google';
-import GitHubIcon from '@mui/icons-material/GitHub';
+import { useRouter } from 'next/navigation';
 
 const LoginupForm = () => {
   const { username, password } = useUserFormState();
-
+  const [infoError, setinfoError] = useState<null | string>(null);
   const [modal, setModal] = useState<{
     open: boolean;
     message?: string;
@@ -86,12 +86,15 @@ const LoginupForm = () => {
           setModal({ open: true, message: '회원 정보 없음 또는 로그인 실패' });
         }
       });*/
+      setinfoError(null); //비밀번호 초기화
     } catch (error) {
       console.error('Firestore에서 데이터를 가져오는 중 오류 발생:', error);
-      const confirmation = window.confirm('로그인 실패');
-      if (confirmation) {
-        if (username.ref.current) username.ref.current.focus();
-      }
+      // const confirmation = window.confirm('로그인 실패');
+      // if (confirmation) {
+      //   if (username.ref.current) username.ref.current.focus();
+      // }
+      setinfoError('아이디 혹은 비밀번호가 올바르지 않습니다.');
+      if (username.ref.current) username.ref.current.focus();
     }
   };
 
@@ -107,7 +110,7 @@ const LoginupForm = () => {
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
   const handleGithubLogin = () => {
     const provider = new GithubAuthProvider();
@@ -122,7 +125,7 @@ const LoginupForm = () => {
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
   const closeModal = () => {
     setModal({ open: false });
@@ -134,9 +137,9 @@ const LoginupForm = () => {
       <div>
         <form onSubmit={handleSubmit} className="block items-center">
           <div className="mb-10 ">
-            <div className="">
+            <div>
               <label htmlFor="" className="font-bold text-gray-600 text-lg">
-                Username:
+                이메일:
               </label>
             </div>
             <input
@@ -150,7 +153,7 @@ const LoginupForm = () => {
           </div>
           <div className="mb-10 ">
             <label htmlFor="" className="font-bold text-gray-600 text-lg">
-              Password:
+              비밀번호:
             </label>
             <input
               className="mb-1 w-full h-14 px-9 text-xl border-2 font-semibold rounded-lg border-gray-300 text-gray-900"
@@ -159,22 +162,30 @@ const LoginupForm = () => {
               value={password.state}
               onChange={(e) => password.set(e.target.value)}
             />
-            <p className="text-gray-500 text-lg">{password.errorMsg}</p>
+            <p className="text-gray-500 text-lg">{infoError}</p>
           </div>
           <button
             type="submit"
             className="mb-2 w-full h-16 px-9 text-xl font-semibold rounded-full bg-blue-300 text-gray-900"
           >
-            Sign Up
+            이메일로 계속하기
           </button>
         </form>
-        <div className="flex w-20  items-center text-center "></div>
-        <button onClick={handleGoogleLogin} className='mr-3'>
-          <GoogleIcon className="text-4xl text-gray-500" />
-        </button>
-        <button onClick={handleGithubLogin}>
-        <GitHubIcon className="text-4xl text-gray-500"/>
-        </button>
+        <br></br>
+        <div className="text-center">
+          <span>또는</span>
+        </div>
+        <br></br>
+        <div className="flex w-20 ml-24">
+          <button onClick={handleGoogleLogin}>
+            <GoogleIcon className="text-7xl text-gray-500" />
+            Google
+          </button>
+          <button onClick={handleGithubLogin}>
+            <GitHubIcon className="text-7xl text-gray-500" />
+            GitHub
+          </button>
+        </div>
       </div>
       {/*모달*/}
       <Modal openModal={modal} closeModal={closeModal}></Modal>
